@@ -15,7 +15,7 @@ license=('BSD-3-Clause')
 depends=('readline' 'zlib' 'bzip2' 'bash')
 provides=(libpcre2-{8,16,32,posix}.so)
 options=(staticlibs)
-source=("https://github.com/PCRE2Project/pcre2/releases/download/$pkgname-$pkgver/$pkgname-$pkgver.tar.bz2"{,.sig})
+source=("$url/releases/download/$pkgname-$pkgver/$pkgname-$pkgver.tar.bz2"{,.sig})
 sha512sums=('72fbde87fecec3aa4b47225dd919ea1d55e97f2cbcf02aba26e5a0d3b1ffb58c25a80a9ef069eb99f9cf4e41ba9604ad06a7ec159870e1e875d86820e12256d3'
             'SKIP')
 validpgpkeys=('45F68D54BBE23FB3039B46E59766E084FB0F43D8')  # Philip Hazel <ph10@hermes.cam.ac.uk>
