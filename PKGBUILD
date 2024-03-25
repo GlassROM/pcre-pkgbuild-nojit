@@ -16,15 +16,21 @@ depends=('bzip2' 'glibc' 'readline' 'zlib')
 optdepends=('sh: for pcre2-config')
 provides=(libpcre2-{8,16,32,posix}.so)
 options=(staticlibs)
-source=("$url/releases/download/$pkgname-$pkgver/$pkgname-$pkgver.tar.bz2"{,.sig})
+source=("$url/releases/download/$pkgname-$pkgver/$pkgname-$pkgver.tar.bz2"{,.sig}
+         https://github.com/zherczeg/sljit/commit/56dbde07b05252f0b304b04040a86cfb9f109ae9.patch)
 sha512sums=('8ac1520c32e9e5672404aaf6104e23c9ee5c3c28ad28ff101435599d813cbb20e0491a3fd34e012b4411b3e0366a4c6dfa3f02d093acaa6ff0ab25478bb7ade9'
-            'SKIP')
+            'SKIP'
+            '4379a06a142a9c9dc61298e86c722f1f2b6d83493acda8e472c866093b3e2192d315998c5a87dfd231739394d5c809c05415126084b18f80a002ee8861c0ed4f')
 b2sums=('f87f9f36dd6a806cdba1f077f51b53da2583f1898f83e41d594622b28ac8efbc1b2d122b752a9d6cd461fe0e3c7c85ee93358443df518a336da4ee9d72cca808'
-        'SKIP')
+        'SKIP'
+        '736aa7eaa2ed571117f545ae78151fda6a5ef5935bf70f132b1d20d0ff6e46543194f409a02eac727a8209fb0d25e6870705e8a95b3feb07e799d288fd852822')
 validpgpkeys=('45F68D54BBE23FB3039B46E59766E084FB0F43D8')  # Philip Hazel <ph10@hermes.cam.ac.uk>
 
 build() {
   cd $pkgname-$pkgver
+  # Fix AVX detection
+  # [PATCH] Add xgetbv feature detection support on x86
+  patch -Np2 -i "$srcdir"/56dbde07b05252f0b304b04040a86cfb9f109ae9.patch -d src/sljit
 
   # use fat LTO objects for static libraries
   CFLAGS+=" -ffat-lto-objects"
