@@ -30,6 +30,16 @@ b2sums=('f87f9f36dd6a806cdba1f077f51b53da2583f1898f83e41d594622b28ac8efbc1b2d122
 validpgpkeys=('45F68D54BBE23FB3039B46E59766E084FB0F43D8')  # Philip Hazel <ph10@hermes.cam.ac.uk>
 
 build() {
+  local configure_options=(
+    --enable-jit
+    --enable-pcre2-16
+    --enable-pcre2-32
+    --enable-pcre2grep-libbz2
+    --enable-pcre2grep-libz
+    --enable-pcre2test-libreadline
+    --prefix=/usr
+  )
+
   cd $pkgname-$pkgver
   # Fix AVX detection
   # [PATCH] Add xgetbv feature detection support on x86
@@ -43,14 +53,7 @@ build() {
   CFLAGS+=" -ffat-lto-objects"
   CXXFLAGS+=" -ffat-lto-objects"
 
-  ./configure \
-    --prefix=/usr \
-    --enable-pcre2-16 \
-    --enable-pcre2-32 \
-    --enable-jit \
-    --enable-pcre2grep-libz \
-    --enable-pcre2grep-libbz2 \
-    --enable-pcre2test-libreadline
+  ./configure "${configure_options[@]}"
   make
 }
 
