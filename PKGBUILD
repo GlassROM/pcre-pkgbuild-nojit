@@ -45,15 +45,13 @@ build() {
 }
 
 check() {
-  cd $pkgname-$pkgver
-  make -j1 check
+  make -j1 check -C $pkgname-$pkgver
 }
 
 package() {
-  cd $pkgname-$pkgver
-  make DESTDIR="$pkgdir" install
+  make DESTDIR="$pkgdir" install -C $pkgname-$pkgver
 
-  install -Dm644 LICENCE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+  install -Dm644 $pkgname-$pkgver/LICENCE -t "$pkgdir/usr/share/licenses/$pkgname/"
 }
 
 # vim:set sw=2 sts=-1 et:
