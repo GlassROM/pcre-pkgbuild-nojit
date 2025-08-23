@@ -27,12 +27,9 @@ provides=(libpcre2-{8,16,32,posix}.so)
 options=(staticlibs)
 source=(
   $pkgname::git+$url?signed#tag=$pkgname-$pkgver
-  sljit::git+https://github.com/zherczeg/sljit.git
 )
-sha512sums=('02e1b9972c00e3eae7d07ddf0519f19b5291c979fa316453d24fea41adce3e3213f484049091df448765b799b66556901c24a6238fd48a1eef79614319a1c68e'
-            'SKIP')
-b2sums=('196dfcbf6f096b91cb2b72cd1eab53e42a72435f27224fb02fb846f52939d2ae44f1d3ef6d59c024919be9dc00774e13e1bf3c82bec2acb1ac1cf64d66a721cc'
-        'SKIP')
+sha512sums=('02e1b9972c00e3eae7d07ddf0519f19b5291c979fa316453d24fea41adce3e3213f484049091df448765b799b66556901c24a6238fd48a1eef79614319a1c68e')
+b2sums=('196dfcbf6f096b91cb2b72cd1eab53e42a72435f27224fb02fb846f52939d2ae44f1d3ef6d59c024919be9dc00774e13e1bf3c82bec2acb1ac1cf64d66a721cc')
 validpgpkeys=(
   45F68D54BBE23FB3039B46E59766E084FB0F43D8  # Philip Hazel <ph10@hermes.cam.ac.uk>
   A95536204A3BB489715231282A98E77EB6F24CA8  # Nicholas Wilson <nicholas@nicholaswilson.me.uk>
@@ -41,21 +38,15 @@ validpgpkeys=(
 prepare() {
   cd $pkgname
 
-  git submodule init
-  git config submodule."deps/sljit".url ../sljit
-  git -c protocol.file.allow=always submodule update
-
   ./autogen.sh
 
   # extract licenses
-  cp -v deps/sljit/LICENSE ../BSD-2-Clause.txt
   sed -n '70,94p' LICENCE.md > ../BSD-3-Clause.txt
   sed -n '100,104p' LICENCE.md > ../PCRE2-exception.txt
 }
 
 build() {
   local configure_options=(
-    --enable-jit
     --enable-pcre2-16
     --enable-pcre2-32
     --enable-pcre2grep-libbz2
@@ -71,11 +62,7 @@ build() {
   CXXFLAGS+=" -ffat-lto-objects"
 
   ./configure "${configure_options[@]}"
-  make
-}
-
-check() {
-  make -j1 check -C $pkgname
+  make -j$(nproc --all)
 }
 
 package() {
